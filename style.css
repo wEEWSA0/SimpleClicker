@@ -1,0 +1,10 @@
+.main-div{
+    background-color: #eee;
+}
+
+.clickButton {
+    height: 60px;
+    width: 100px;
+    font-size: 25px;
+    text-align: center;
+}
