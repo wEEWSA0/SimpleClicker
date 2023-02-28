@@ -16,7 +16,7 @@ class Position {
     }
 }
 
-const power = 500;
+const power = 300;
 
 let direction = new Direction();
 
@@ -30,7 +30,7 @@ function ChangeDirection(){
 
     while (true) {
         if (Math.floor(Math.random() + 0.5) === 0) {
-            if (Math.abs(position.X + dir) === 3) {
+            if (Math.floor(Math.abs(position.X + dir) + 0.5) === 3) {
                 continue;
             }
             position.X += dir;
@@ -41,7 +41,7 @@ function ChangeDirection(){
 
             break;
         } else {
-            if (Math.abs(position.Y + dir) === 3) {
+            if (Math.floor(Math.abs(position.Y + dir) + 0.5) === 3) {
                 continue;
             }
             position.Y += dir;
