@@ -1,10 +1,30 @@
-.main-div{
+.main-div {
     background-color: #eee;
 }
 
 .clickButton {
     height: 60px;
-    width: 100px;
+    width: 70px;
     font-size: 25px;
     text-align: center;
+    transition-timing-function: ease;
+    transition-duration: 1s;
+}
+
+.knockedScore {
+    color: #565e64;
+}
+
+.knockedScoreDiv {
+    padding-top: 10px;
+    height: 50px;
+}
+
+.bestScore {
+    color: #adb5bd;
+    margin-left: 95%;
+}
+
+.bestScoreDiv {
+    height: 30px;
 }

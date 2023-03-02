@@ -2,7 +2,7 @@ class Direction {
     Names;
 
     constructor() {
-        this.Names = { None: 'none', Up: 'up', Down: 'down', Left: 'left', Right: 'right' };
+        this.Names = { None: 'none', Up: '↑', Down: '↓', Left: '←', Right: '→' };
     }
 }
 
@@ -16,21 +16,32 @@ class Position {
     }
 }
 
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
+}
+
 const power = 300;
+const maxPos = 3;
 
 let direction = new Direction();
 
 let position = new Position();
 
 let clickButton = document.getElementById("clickButton");
+let scoreText = document.getElementById("score");
+let knockedScoreText = document.getElementById("knockedScore");
+let bestScoreText = document.getElementById("bestScore");
 
 function ChangeDirection(){
-    let dir = Math.floor(Math.random() + 0.5) * 2 - 1;
     let dirName;
 
     while (true) {
-        if (Math.floor(Math.random() + 0.5) === 0) {
-            if (Math.floor(Math.abs(position.X + dir) + 0.5) === 3) {
+        let dir = getRandomIntInclusive(0, 1) * 2 - 1;
+
+        if (getRandomIntInclusive(0, 1) === 0) {
+            if (Math.abs(position.X + dir) === maxPos) {
                 continue;
             }
             position.X += dir;
@@ -41,7 +52,7 @@ function ChangeDirection(){
 
             break;
         } else {
-            if (Math.floor(Math.abs(position.Y + dir) + 0.5) === 3) {
+            if (Math.abs(position.Y + dir) === maxPos) {
                 continue;
             }
             position.Y += dir;
@@ -62,11 +73,76 @@ function MoveToPosition(){
     clickButton.style.marginTop = power * position.Y + "px";
 }
 
-ChangeDirection();
-
-function clickButton_Click() {
+function NextButtonStage() {
     MoveToPosition();
     ChangeDirection();
 
     console.log(position);
+}
+
+function Expectation() {
+    if (currentSpeedLayer !== speedLayers - 1){
+        currentSpeedLayer++;
+
+        return;
+    }
+
+    if (score > bestScore){
+        bestScore = score;
+
+        bestScoreText.textContent = bestScore;
+    }
+
+    score = 0;
+
+    currentSpeedLayer = 0;
+
+    scoreText.textContent = score.toString();
+
+    NextButtonStage();
+}
+
+function KnockedScoreHide() {
+    knockedScoreText.textContent = '';
+
+    window.clearTimeout(knockedTimerId);
+}
+
+function StartExpectationTimer() {
+    timerId = window.setInterval(Expectation, expectationTime / speedLayers);
+}
+
+let score = 0;
+let bestScore = 0;
+let reward = 300;
+
+let speedLayers = 3;
+let currentSpeedLayer = 0;
+let expectationTime = 800;
+let timerId;
+StartExpectationTimer();
+
+let knockedScoreTime = 250;
+let knockedTimerId;
+
+ChangeDirection();
+
+function clickButton_Click() {
+    window.clearTimeout(timerId);
+
+    NextButtonStage();
+
+    let currentReward = reward / (currentSpeedLayer + 1);
+    score += currentReward;
+
+    window.clearTimeout(knockedTimerId); // danger or safe!?
+
+    knockedScoreText.textContent = '+' + currentReward.toString() + `; ${currentSpeedLayer}`;
+    knockedTimerId = window.setInterval(KnockedScoreHide, knockedScoreTime)
+
+    currentSpeedLayer = 0;
+
+    scoreText.textContent = score.toString();
+
+    StartExpectationTimer();
 }
