@@ -77,6 +77,10 @@ function NextButtonStage() {
     MoveToPosition();
     ChangeDirection();
 
+    // clickButton.setAttribute("disabled","");
+    // clickButton.setAttribute("Navigation","None");
+    // not work
+
     console.log(position);
 }
 
@@ -91,6 +95,8 @@ function Expectation() {
         bestScore = score;
 
         bestScoreText.textContent = bestScore;
+
+        localStorage.setItem('bestScore', bestScore);
     }
 
     score = 0;
@@ -116,6 +122,12 @@ let score = 0;
 let bestScore = 0;
 let reward = 300;
 
+if (localStorage.getItem('bestScore') != null){
+    bestScore = localStorage.getItem('bestScore');
+
+    bestScoreText.textContent = bestScore;
+}
+
 let speedLayers = 3;
 let currentSpeedLayer = 0;
 let expectationTime = 800;
@@ -137,7 +149,7 @@ function clickButton_Click() {
 
     window.clearTimeout(knockedTimerId); // danger or safe!?
 
-    knockedScoreText.textContent = '+' + currentReward.toString() + `; ${currentSpeedLayer}`;
+    knockedScoreText.textContent = '+' + currentReward.toString()/* + `; ${currentSpeedLayer}`*/;
     knockedTimerId = window.setInterval(KnockedScoreHide, knockedScoreTime)
 
     currentSpeedLayer = 0;
